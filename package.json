@@ -3,16 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "main": "knexfile.js",
-  "engines" : { 
-    "node" : "14.16.0"
-   },
+  "engines": {
+    "node": "14.16.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server",
-    "start": "run-p prod resetdb",
-    "prod": "npm install",
+    "start": "npm install",
     "resetdb": "knex migrate:rollback && knex migrate:latest && knex seed:run",
-    "postinstall": "node server"
+    "postinstall": "npm run resetdb && node server"
   },
   "keywords": [],
   "author": "",
