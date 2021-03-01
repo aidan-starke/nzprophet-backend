@@ -1,8 +1,8 @@
 
 exports.up = function (knex) {
     return knex.schema.createTable('cryptos', table => {
-        table.increments('id')
-        table.string('name')
+        table.increments('id').primary()
+        table.string('name').unique()
         table.integer('image_id').references('id')
     })
 };

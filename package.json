@@ -1,16 +1,13 @@
 {
   "name": "nzprophet-backend",
   "version": "1.0.0",
-  "description": "",
   "main": "knexfile.js",
   "scripts": {
+    "start": "yarn install && knex migrate:rollback && knex migrate:latest && knex seed:run",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server",
-    "start": "npm install",
-    "postinstall": "knex migrate:latest && knex seed:run"
+    "lint": "eslint \"**/*.js\" \"**/*.jsx\""
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
@@ -21,8 +18,8 @@
     "pg": "^8.5.1"
   },
   "devDependencies": {
+    "eslint": "^7.21.0",
     "nodemon": "^2.0.7",
-    "sqlite3": "^5.0.2",
-    "webpack-cli": "^4.5.0"
+    "sqlite3": "^5.0.2"
   }
 }
