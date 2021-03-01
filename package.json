@@ -6,7 +6,7 @@
     "node": "14.16.0"
   },
   "scripts": {
-    "start": "yarn install && knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "start": "knex migrate:rollback && knex migrate:latest && knex seed:run && node server",
     "dev": "nodemon server",
     "lint": "eslint \"**/*.js\" \"**/*.jsx\""
   },
