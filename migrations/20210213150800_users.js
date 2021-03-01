@@ -1,5 +1,5 @@
 
-exports.up = function(knex) {
+exports.up = function (knex) {
     return knex.schema.createTable('users', (table) => {
         table.increments('id')
         table.string('name')
@@ -8,9 +8,9 @@ exports.up = function(knex) {
         table.string('password_hash')
         table.timestamp('reset_expires_at')
         table.string('reset_password_key')
-      })
+    })
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
     return knex.schema.dropTable('users')
 };
