@@ -4,7 +4,6 @@ exports.up = function (knex) {
         table.increments('id')
         table.string('name')
         table.integer('image_id').references('id')
-        table.foreign('image_id').references('images.id')
     })
 };
 
