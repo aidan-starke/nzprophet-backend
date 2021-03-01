@@ -10,5 +10,4 @@ exports.seed = function (knex) {
     { id: 7, user_id: 2, crypto_id: 4, coins_owned: 0.10953209, investment: 272.47 },
     { id: 8, user_id: 2, crypto_id: 6, coins_owned: 339.858957, investment: 243.75 }
   ]);
-});
 };

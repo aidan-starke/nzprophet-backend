@@ -8,5 +8,4 @@ exports.seed = function (knex) {
     { id: 5, crypto_id: 5, src: './LTC.png' },
     { id: 6, crypto_id: 6, src: './XRP.png' },
   ]);
-});
 };

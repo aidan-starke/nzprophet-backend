@@ -8,5 +8,4 @@ exports.seed = function (knex) {
     { id: 5, name: 'LTC', image_id: 5 },
     { id: 6, name: 'XRP', image_id: 6 }
   ]);
-});
 };
