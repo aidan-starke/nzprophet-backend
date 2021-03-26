@@ -21,24 +21,4 @@ router.get('/', (req, res) => {
         .catch(err => console.log(err.message))
 })
 
-router.put('/trade', (req, res) => {
-    try {
-        db.addTrade(req.body)
-
-        res.sendStatus(200)
-    } catch {
-        res.sendStatus(500)
-    }
-})
-
-router.post('/trade/new', (req, res) => {
-    try {
-        db.addTradeNewCoin(req.body)
-
-        res.sendStatus(200)
-    } catch {
-        res.sendStatus(500)
-    }
-})
-
 module.exports = router

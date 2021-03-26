@@ -90,29 +90,56 @@ function updateCryptoReceived(userId, cryptoReceivedId, coinsReceived, db = data
     })
 }
 
-function addTrade({ user, cryptoSent, coinsSent, cryptoReceived, coinsReceived }, db = database) {
-  const userId = getUserId(user)
-  const cryptoSentId = getCryptoId(cryptoSent)
+function addTrade({ user, cryptoSent, coinsSent, cryptoReceived, coinsReceived }) {
+  getUserId(user)
     .then(res => {
-      const cryptoId = res[0].id
-      return cryptoId
-    })
-  const cryptoReceivedId = getCryptoId(cryptoReceived)
+      let userId = res[0].id
 
-  updateCryptoSent(userId, cryptoSentId, coinsSent)
-    .then(() => updateCryptoReceived(userId, cryptoReceivedId, coinsReceived))
+      getCryptoId(cryptoSent)
+        .then(res => {
+          let cryptoSentId = res[0].id
+
+          checkCryptoExists(cryptoReceived)
+            .then(res => {
+              if (res.length === 0) addCrypto(cryptoReceived, userId)
+                .then(() => tradeCallback(userId, cryptoSent, cryptoSentId, coinsSent, cryptoReceived, coinsReceived))
+
+              else tradeCallback(userId, cryptoSent, cryptoSentId, coinsSent, cryptoReceived, coinsReceived)
+            })
+        })
+    })
 }
 
-function addTradeNewCoin({ user, cryptoSent, coinsSent, cryptoReceived, coinsReceived }, db = database) {
-  const userId = getUserId(user)
-  const cryptoSentId = getCryptoId(cryptoSent)
-  const cryptoReceivedId = getCryptoId(cryptoReceived)
-
-  updateCryptoSent(userId, cryptoSentId, coinsSent)
-    .then(() => checkCryptoExists(cryptoReceived))
+function tradeCallback(userId, cryptoSent, cryptoSentId, coinsSent, cryptoReceived, coinsReceived, db = database) {
+  getCryptoId(cryptoReceived)
     .then(res => {
-      if (res.length === 0) addCrypto(cryptoReceived, userId).then(() => updateCryptoReceived(userId, cryptoReceivedId, coinsReceived))
-      else updateCryptoReceived(userId, cryptoReceivedId, coinsReceived)
+      let cryptoReceivedId = res[0].id
+
+      updateCryptoSent(userId, cryptoSentId, coinsSent)
+        .then(() => updateCryptoReceived(userId, cryptoReceivedId, coinsReceived))
+        .then(() => {
+          var timestamp = new Date().toString().replace(/[G].*/, '')
+          timestamp = timestamp.substring(0, timestamp.length - 4)
+
+          return db('transactions')
+            .insert({
+              'user_id': userId, 'crypto_sent': cryptoSent, 'coins_sent': coinsSent, 'crypto_received': cryptoReceived,
+              'coins_received': coinsReceived, 'timestamp': timestamp
+            })
+        })
+    })
+}
+
+function getTrades({ user, crypto }, db = database) {
+  return getUserId(user)
+    .then(res => {
+      let userId = res[0].id
+
+      return db('transactions')
+        .where({ 'user_id': userId, 'crypto_sent': crypto })
+        .orWhere({ 'user_id': userId, 'crypto_received': crypto })
+        .select('id', 'user_id as userId', 'crypto_sent as cryptoSent', 'coins_sent as coinsSent', 'crypto_received as cryptoReceived',
+          'coins_received as coinsReceived', 'timestamp')
     })
 }
 
@@ -121,5 +148,5 @@ module.exports = {
   getUsername,
   getCrypto,
   addTrade,
-  addTradeNewCoin
+  getTrades
 }
