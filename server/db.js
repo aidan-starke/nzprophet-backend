@@ -1,5 +1,5 @@
 const knex = require('knex')
-const config = require('../knexfile').development
+const config = require('../knexfile').production
 const database = knex(config)
 
 function getUsers(db = database) {
