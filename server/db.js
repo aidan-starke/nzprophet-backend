@@ -1,5 +1,5 @@
 const knex = require('knex')
-const config = require('../knexfile').production
+const config = require('../knexfile').development
 const database = knex(config)
 
 function getUsers(db = database) {
@@ -143,10 +143,31 @@ function getTrades({ user, crypto }, db = database) {
     })
 }
 
+function addBuy({ user, cryptoBought, coinsBought, invested }, db = database) {
+  console.log(user)
+  console.log(cryptoBought)
+  console.log(Number(coinsBought))
+  console.log(Number(invested))
+
+  getUserId(user)
+    .then(res => {
+      let userId = res[0].id
+
+      var timestamp = new Date().toString().replace(/[G].*/, '')
+      timestamp = timestamp.substring(0, timestamp.length - 4)
+
+      return db('transactions')
+        .insert({
+          'user_id': userId, 'crypto_bought': cryptoBought, 'investment': invested, 'coins_bought': coinsBought, 'timestamp': timestamp
+        })
+    })
+}
+
 module.exports = {
   getUsers,
   getUsername,
   getCrypto,
   addTrade,
-  getTrades
+  getTrades,
+  addBuy
 }

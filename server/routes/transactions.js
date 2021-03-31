@@ -20,4 +20,14 @@ router.post('/trade', (req, res) => {
     }
 })
 
+router.post('/buy', (req, res) => {
+    try {
+        db.addBuy(req.body.params.data)
+
+        res.sendStatus(200)
+    } catch {
+        res.sendStatus(500)
+    }
+})
+
 module.exports = router
