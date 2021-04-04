@@ -1,5 +1,5 @@
 const knex = require('knex')
-const config = require('../knexfile').development
+const config = require('../knexfile').production
 const database = knex(config)
 
 function getUsers(db = database) {
@@ -82,11 +82,18 @@ function updateCryptoReceived(userId, cryptoReceivedId, coinsReceived, db = data
     .where({ 'user_id': userId, 'crypto_id': cryptoReceivedId })
     .select('coins_owned as coinsOwned')
     .then(res => {
-      const sumCoinsOwned = res[0].coinsOwned + Number(coinsReceived)
+      if (res.length === 0) {
+        return db('user_crypto')
+          .where({ 'user_id': userId, 'crypto_id': cryptoReceivedId })
+          .update('coins_owned', coinsReceived)
+      }
+      else {
+        const sumCoinsOwned = res[0].coinsOwned + Number(coinsReceived)
 
-      return db('user_crypto')
-        .where({ 'user_id': userId, 'crypto_id': cryptoReceivedId })
-        .update('coins_owned', sumCoinsOwned)
+        return db('user_crypto')
+          .where({ 'user_id': userId, 'crypto_id': cryptoReceivedId })
+          .update('coins_owned', sumCoinsOwned)
+      }
     })
 }
 
